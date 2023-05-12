@@ -1,0 +1,30 @@
+{
+  "name": "UserCreated",
+  "namespace": "com.prodyna.demo.v1.user.event",
+  "type": "record",
+  "fields": [
+    {
+      "name": "email",
+      "type": "string"
+    },
+    {
+      "name": "createdBy",
+      "type": "string"
+    },
+    {
+      "name": "firstName",
+      "type": "long"
+    },
+    {
+      "name": "lastName",
+      "type": "long"
+    },
+    {
+      "name": "createdAt",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    }
+  ]
+}

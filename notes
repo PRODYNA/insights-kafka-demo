@@ -1,0 +1,12 @@
+TODO
+
+- da vidim za properties za consumer i producer
+- da li moze sve u yml file
+- da podignem kafku lokalno
+- da izgenerisem pojo za usercreated
+- listener ona jedna promena
+- producer da se namesti
+- controller 1 metoda koja produce
+- 1 metoda koja produce neki krs - da se vidi error
+- default ack vs manual
+- README

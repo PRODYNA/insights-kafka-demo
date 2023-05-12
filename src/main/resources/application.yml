@@ -1,0 +1,81 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    security:
+      protocol: PLAINTEXT
+    listener:
+      poll-timeout: 3000
+      concurrency: 3
+    producer:
+      acks: all
+      security:
+        protocol: PLAINTEXT
+      client-id: local:prodyna:kafka-demo-service
+      properties:
+        enable:
+          idempotence: true
+    consumer:
+      properties:
+        specific.avro.reader: true
+        session.timeout.ms: 30000
+        max.poll.interval.ms: 600000
+      max-poll-records: 5
+      heartbeat-interval: 3000
+      enable-auto-commit: false
+      security:
+        protocol: PLAINTEXT
+      auto-offset-reset: earliest
+    properties:
+      schema:
+        registry:
+          url: http://localhost:8081
+      auto:
+        register:
+          schemas: false
+      max:
+        in:
+          flight:
+            requests:
+              per:
+                connection: 5
+
+kafka:
+  topic:
+    user:
+      name: local.com.prodyna.v1.user
+      source: com.prodyna.kafka-demo-service
+      specversion: 1.0
+      type: UserCreated
+  listener:
+    clientIdPrefix: "local:prodyna:kafka-demo-service:"
+    groupIdPostfix: .kafka-demo
+
+logging:
+  level:
+    root: INFO
+    com.prodyna.kafkademo: INFO
+
+server:
+  error:
+    include-message: always
+  servlet:
+    context-path: /kafka-demo
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+app:
+  description: "@project.description@"
+  version: "@project.version@"
+
+management:
+  endpoint:
+    health:
+      enabled: true
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: "*"
+  server:
+    port: 9001
