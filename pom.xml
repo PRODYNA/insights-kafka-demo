@@ -94,7 +94,7 @@
 				<executions>
 					<execution>
 						<id>generate-avro-sources</id>
-						<phase>none</phase> <!-- In order to build resources locally replace with generate-sources phase -->
+						<phase>generate-sources</phase> <!-- In order to build resources locally replace with generate-sources phase -->
 						<goals>
 							<goal>schema</goal>
 						</goals>
@@ -115,7 +115,7 @@
 				<executions>
 					<execution>
 						<id>upload-schema</id>
-						<phase>none</phase> <!-- In order to upload locally replace with validate phase -->
+						<phase>validate</phase> <!-- In order to upload locally replace with validate phase -->
 						<configuration>
 							<schemaRegistryUrls>
 								<param>http://localhost:8081</param>
@@ -123,7 +123,7 @@
 							<subjects>
 								<!-- UserCreated -->
 								<local.com.prodyna.v1.user-com.prodyna.demo.v1.user.event.UserCreated>
-									${project.basedir}/src/main/resources/avro/event.invoice-created.avsc
+									${project.basedir}/src/main/resources/avro/event.user-created.avsc
 								</local.com.prodyna.v1.user-com.prodyna.demo.v1.user.event.UserCreated>
 							</subjects>
 							<schemaTypes>

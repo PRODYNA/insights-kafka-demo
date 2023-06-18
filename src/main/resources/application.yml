@@ -44,7 +44,6 @@ kafka:
     user:
       name: local.com.prodyna.v1.user
       source: com.prodyna.kafka-demo-service
-      specversion: 1.0
       type: UserCreated
   listener:
     clientIdPrefix: "local:prodyna:kafka-demo-service:"

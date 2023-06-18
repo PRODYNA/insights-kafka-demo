@@ -13,11 +13,11 @@
     },
     {
       "name": "firstName",
-      "type": "long"
+      "type": "string"
     },
     {
       "name": "lastName",
-      "type": "long"
+      "type": "string"
     },
     {
       "name": "createdAt",

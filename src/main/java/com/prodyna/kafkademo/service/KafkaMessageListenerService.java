@@ -1,5 +1,7 @@
 package com.prodyna.kafkademo.service;
 
+import com.prodyna.demo.v1.user.event.UserCreated;
+import com.prodyna.kafkademo.commons.KafkaConstants;
 import lombok.AllArgsConstructor;
 import org.apache.avro.specific.SpecificRecord;
 import org.slf4j.Logger;
@@ -18,30 +20,27 @@ public class KafkaMessageListenerService {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaMessageListenerService.class);
 
-    public static final String ID = "id";
-    public static final String SOURCE = "source";
-    public static final String TYPE = "type";
-    public static final String TIME = "time";
-    public static final String NO_HEADER_PROVIDED = "no_header_provided";
-
     private static final String PAYLOAD_INFO_LOGGING_PATTERN =
             "Thread id {} | Partition {} | Offset {} | Key {} | Timestamp {} | Payload {}";
-    private static final String HEADER_INFO_LOGGING_PATTERN = "Headers: id {} | source {} | type {} | time {}";
+    private static final String HEADER_INFO_LOGGING_PATTERN = "Headers: source {} | type {} | time {}";
 
-    @KafkaListener(topics = "${kafka.topic.user.name}", clientIdPrefix = "${kafka.listener.clientIdPrefix}${kafka.topic.user.name}",
+    @KafkaListener(topics = "${kafka.topic.user.name}",
+            clientIdPrefix = "${kafka.listener.clientIdPrefix}${kafka.topic.user.name}",
             groupId = "${kafka.topic.user.name}${kafka.listener.groupIdPostfix}")
-    public void listenOrderDeliveryStateChanged(@Payload SpecificRecord payload, @Headers MessageHeaders messageHeaders,
-            Acknowledgment acknowledgment) {
+    public void listenOrderDeliveryStateChanged(final @Payload UserCreated payload,
+            final @Headers MessageHeaders messageHeaders,
+            final Acknowledgment acknowledgment) {
         logPayloadInfo(payload, messageHeaders);
         logHeaderInfo(messageHeaders);
 
         try {
             Thread.sleep(1000L);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
 
-        log.info("We are done with processing!");
+        log.info("We are done with processing, exit listener!");
 
         acknowledgment.acknowledge();
     }
@@ -49,22 +48,24 @@ public class KafkaMessageListenerService {
     private void logPayloadInfo(SpecificRecord payload, MessageHeaders messageHeaders) {
         log.info(PAYLOAD_INFO_LOGGING_PATTERN,
                 Thread.currentThread().getId(),
-                messageHeaderToString(messageHeaders.getOrDefault(KafkaHeaders.RECEIVED_PARTITION, NO_HEADER_PROVIDED)),
-                messageHeaderToString(messageHeaders.getOrDefault(KafkaHeaders.OFFSET, NO_HEADER_PROVIDED)),
-                messageHeaderToString(messageHeaders.getOrDefault(KafkaHeaders.RECEIVED_KEY, NO_HEADER_PROVIDED)),
-                messageHeaderToString(messageHeaders.getOrDefault(KafkaHeaders.RECEIVED_TIMESTAMP, NO_HEADER_PROVIDED)),
+                messageHeaderToString(messageHeaders, KafkaHeaders.RECEIVED_PARTITION),
+                messageHeaderToString(messageHeaders, KafkaHeaders.OFFSET),
+                messageHeaderToString(messageHeaders, KafkaHeaders.RECEIVED_KEY),
+                messageHeaderToString(messageHeaders, KafkaHeaders.RECEIVED_TIMESTAMP),
                 payload);
     }
 
     private void logHeaderInfo(MessageHeaders messageHeaders) {
         log.info(HEADER_INFO_LOGGING_PATTERN,
-                messageHeaderToString(messageHeaders.getOrDefault(ID, NO_HEADER_PROVIDED)),
-                messageHeaderToString(messageHeaders.getOrDefault(SOURCE, NO_HEADER_PROVIDED)),
-                messageHeaderToString(messageHeaders.getOrDefault(TYPE, NO_HEADER_PROVIDED)),
-                messageHeaderToString(messageHeaders.getOrDefault(TIME, NO_HEADER_PROVIDED)));
+                messageHeaderToString(messageHeaders, KafkaConstants.SOURCE),
+                messageHeaderToString(messageHeaders, KafkaConstants.TYPE),
+                messageHeaderToString(messageHeaders, KafkaConstants.TIME));
     }
 
-    private String messageHeaderToString(Object messageHeader) {
+    private String messageHeaderToString(final MessageHeaders messageHeaders, final String headerName) {
+        final Object messageHeader = messageHeaders.getOrDefault(headerName, KafkaConstants.NO_HEADER_PROVIDED);
+
+
         if (messageHeader == null) {
             return "not found";
         }

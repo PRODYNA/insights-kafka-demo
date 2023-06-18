@@ -1,12 +1,13 @@
 package com.prodyna.kafkademo.config.kafka.producer;
 
-import java.util.Map;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
+
+import java.util.Map;
 
 public interface KafkaProducerProperties {
 
-  KafkaProperties getKafkaProperties();
+    KafkaProperties getKafkaProperties();
 
-  Map<String, Object> getProperties();
+    Map<String, Object> getProperties();
 
 }
