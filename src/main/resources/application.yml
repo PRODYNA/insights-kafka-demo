@@ -38,6 +38,10 @@ spring:
             requests:
               per:
                 connection: 5
+      value:
+        subject:
+          name:
+            strategy: io.confluent.kafka.serializers.subject.TopicRecordNameStrategy
 
 kafka:
   topic:
@@ -58,7 +62,7 @@ server:
   error:
     include-message: always
   servlet:
-    context-path: /kafka-demo
+    context-path: /demo
   tomcat:
     mbeanregistry:
       enabled: true

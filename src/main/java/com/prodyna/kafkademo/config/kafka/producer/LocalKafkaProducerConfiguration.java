@@ -1,6 +1,5 @@
 package com.prodyna.kafkademo.config.kafka.producer;
 
-import com.prodyna.kafkademo.commons.KafkaConstants;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
 import lombok.AllArgsConstructor;
@@ -27,8 +26,6 @@ public class LocalKafkaProducerConfiguration implements KafkaProducerProperties 
 
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
-        properties.put(KafkaConstants.VALUE_SUBJECT_NAME_STRATEGY,
-                io.confluent.kafka.serializers.subject.TopicRecordNameStrategy.class);
         properties.put(KafkaAvroSerializerConfig.AVRO_REMOVE_JAVA_PROPS_CONFIG, true);
 
         return properties;
